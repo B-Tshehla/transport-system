@@ -7,46 +7,24 @@
               <div v-if="!isfilled" class="user-form"> 
                     <form>
                         <div class="form-group">
-                                <label for="exampleFormControlSelect1">Location of departure:</label>
-                                <select class="form-control" id="exampleFormControlSelect1">
-                                <option>select departure</option>
-                                <option>Arcadia</option>
-                                <option>Ga-Rankua</option>
-                                <option>Pretoria(Main)</option>
-                                <option>Soshanguve(North)</option>
-                                <option>Soshanguve(South)</option>
+                                <label for="exampleFormControlSelect1">Location of Departure:</label>
+                                <select class="form-control" v-model="select.depature" @change="depature(select.depature)">
+                                 <option value="" disabled selected>Select your option</option>
+                                <option v-for="Campus in Campuses" :key="Campus">{{Campus}}</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="exampleFormControlSelect1">Destination:</label>
-                                <select class="form-control" id="exampleFormControlSelect1">
-                                <option>Select destination</option>
-                                <option>Arcadia</option>
-                                <option>Ga-Rankua</option>
-                                <option>Pretoria(Main)</option>
-                                <option>Soshanguve(North)</option>
-                                <option>Soshanguve(South)</option>
+                                <select class="form-control" v-model="select.destination" @change="destination(select.destination)">
+                                 <option value="" disabled selected>Select your option</option>
+                                <option v-for="Campus in Campuses" :key="Campus">{{Campus}}</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="exampleFormControlSelect1">time of derparture:</label>
-                                <select class="form-control" id="exampleFormControlSelect1">
-                                <option>Select time of departure</option>
-                                <option>07:00</option>
-                                <option>08:00</option>
-                                <option>09:00</option>
-                                <option>10:00</option>
-                                <option>11:00</option>
-                                <option>12:00</option>
-                                <option>13:00</option>
-                                <option>14:00</option>
-                                <option>15:00</option>
-                                <option>16:00</option>
-                                <option>17:00</option>
-                                <option>18:00</option>
-                                <option>19:00</option>
-                                <option>20:00</option>
-                                <option>21:00</option>
+                             <div class="form-group">
+                                <label for="exampleFormControlSelect1">Time of depature:</label>
+                                <select class="form-control" v-model="times" @change="destination(select.destination)">
+                                 <option value="" disabled selected>Select your option</option>
+                                <option v-for="time in times" :key="time">{{time}}</option>
                                 </select>
                             </div>
                     </form>
@@ -54,9 +32,15 @@
                 <div v-if="isfilled">
                     <qr-code class="qr-space" text="Boitumelo Ganarated the code"></qr-code> 
                 </div>
-            
-                <b-button variant="success" @click="handleSubmit">Book transport</b-button>
-          
+                <div>
+                  <div v-if="!isfilled">
+                    <b-button variant="success" @click="handleSubmit">Book transport</b-button>
+                  </div>
+                <div v-if="isfilled">
+                   <b-button class="btn" variant="danger" @click="cancel">Cancel transport</b-button>
+                </div>
+               
+                </div>
             </div>
          </div>
     </div>
@@ -64,19 +48,56 @@
 
 <script>
 
+import { doc, getDoc, getFirestore } from "firebase/firestore";
+
 
 export default {
     name:'home',
      data() {
       return {
        isfilled:false,
+       types:null,
+       select:{
+         depature:"",
+         destination:"",
+       },
+       Campuses:['Arcadia','Ga-Rankua','Pretoria(Main)','Soshanguve(North)','Soshanguve(South)'],
+       times:["07:00"],
+       studCount:null,
       }
     },
     methods: {
-       handleSubmit(){
-        this.isfilled=true;
-       }
+     async  handleSubmit(){
+        //this.isfilled=true;
+       const db=getFirestore();
+        const docRef = doc(db, "Campus", this.select.depature,this.select.destination,"time");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          console.log("Document data:", docSnap.data().dep.length);
+          for(let i=0;i<docSnap.data().dep.length;i++){
+            this.times[i]=docSnap.data().dep[i];
+          }
+          console.log(this.times);
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }
+       },
+       cancel(){
+         this.isfilled=false;
+       },
+        depature(value){
+        var name = value;
+        console.log(name);
+        },
+        destination(value){
+          var name=value;
+          console.log(name);
+        }
+
     },
+    
 }
 </script>
 
@@ -142,12 +163,13 @@ export default {
 .qr-space{
     padding-top: 20px;
     padding-bottom: 20px;
-    padding-left: 100px;
+    
     justify-content: center;
 }
 .user-form{
     padding-bottom: 20px;
 }
+
 
 </style>
 

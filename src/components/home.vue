@@ -22,7 +22,7 @@
                             </div>
                              <div class="form-group">
                                 <label for="exampleFormControlSelect1">Time of depature:</label>
-                                <select class="form-control" v-model="times" @change="destination(select.destination)">
+                                <select class="form-control" v-model="select.time" @change="timeDep(select.time)">
                                  <option value="" disabled selected>Select your option</option>
                                 <option v-for="time in times" :key="time">{{time}}</option>
                                 </select>
@@ -60,25 +60,24 @@ export default {
        select:{
          depature:"",
          destination:"",
+         time:"",
        },
        Campuses:['Arcadia','Ga-Rankua','Pretoria(Main)','Soshanguve(North)','Soshanguve(South)'],
-       times:["07:00"],
+       times:["07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00"],
        studCount:null,
       }
     },
     methods: {
      async  handleSubmit(){
-        //this.isfilled=true;
+        this.isfilled=true;
        const db=getFirestore();
-        const docRef = doc(db, "Campus", this.select.depature,this.select.destination,"time");
+        
+        const docRef = doc(db, "Campus", this.select.depature,this.select.destination,this.select.time);
         const docSnap = await getDoc(docRef);
-
         if (docSnap.exists()) {
-          console.log("Document data:", docSnap.data().dep.length);
-          for(let i=0;i<docSnap.data().dep.length;i++){
-            this.times[i]=docSnap.data().dep[i];
-          }
-          console.log(this.times);
+          console.log("Document data:", docSnap.data().studCount);
+           this.studCount=docSnap.data().studCount+1;
+          console.log(this.studCount);
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
@@ -94,6 +93,9 @@ export default {
         destination(value){
           var name=value;
           console.log(name);
+        },
+        timeDep(value){
+          console.log(value);
         }
 
     },

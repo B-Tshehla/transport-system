@@ -30,7 +30,7 @@
                     </form>
                 </div>
                 <div v-if="isfilled">
-                    <qr-code class="qr-space" text="Boitumelo Ganarated the code"></qr-code> 
+                    <qr-code class="qr-space" :text="qrText"></qr-code> 
                 </div>
                 <div>
                   <div v-if="!isfilled">
@@ -41,14 +41,15 @@
                 </div>
                
                 </div>
-            </div>
+          </div>
          </div>
     </div>
 </template>
 
 <script>
 
-import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { doc, getDoc, getFirestore,setDoc } from "firebase/firestore";
+
 
 
 export default {
@@ -58,33 +59,56 @@ export default {
        isfilled:false,
        types:null,
        select:{
-         depature:"",
-         destination:"",
-         time:"",
+         depature:null,
+         destination:null,
+         time:null,
        },
        Campuses:['Arcadia','Ga-Rankua','Pretoria(Main)','Soshanguve(North)','Soshanguve(South)'],
-       times:["07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00"],
+       times:["07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00",
+       "15:00","16:00","17:00","18:00","19:00","20:00","21:00"],
        studCount:null,
+       today:null,
+       qrText:null,
       }
     },
     methods: {
      async  handleSubmit(){
-        this.isfilled=true;
-       const db=getFirestore();
         
-        const docRef = doc(db, "Campus", this.select.depature,this.select.destination,this.select.time);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
+      const db=getFirestore();
+      const docRef = doc(db, "Campus", this.select.depature,this.select.destination,this.select.time);
+      const docSnap = await getDoc(docRef);
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth()+1; 
+      var yyyy = today.getFullYear();
+
+    
+      this.today=dd+'/'+mm+'/'+yyyy;
+       
+       if (docSnap.exists()) {
           console.log("Document data:", docSnap.data().studCount);
            this.studCount=docSnap.data().studCount+1;
-          console.log(this.studCount);
+          this.isfilled=true;
+          this.qrText=this.select.depature+" to "+this.select.destination+" ("+this.select.time+" "+this.today+")";
+
+           // Add a new document in collection "cities"
+          await setDoc(doc(db, "Campus", this.select.depature,this.select.destination,this.select.time), {
+            studCount:this.studCount,
+          });
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
         }
+       
+
        },
-       cancel(){
-         this.isfilled=false;
+      async cancel(){
+         const db=getFirestore();
+         // Add a new document in collection "cities"
+          await setDoc(doc(db, "Campus", this.select.depature,this.select.destination,this.select.time), {
+            studCount:this.studCount-1,
+          });
+          this.isfilled=false;
        },
         depature(value){
         var name = value;
@@ -97,9 +121,7 @@ export default {
         timeDep(value){
           console.log(value);
         }
-
-    },
-    
+    },  
 }
 </script>
 

@@ -3,7 +3,40 @@
          <div class="auth-wrapper-home">
             <div class="auth-inner-home">
                 <h3>Bus Terminal</h3>
-
+                <div v-if="isStudData">
+                      <div>
+                          <label for="Name">First Name:</label>
+                          <b-form-input  
+                            type="text" 
+                            id="fname" 
+                            placeholder="Enter your first name"
+                            required
+                            v-model="fName">
+                          </b-form-input>
+                                
+                        </div>
+                         <div>
+                            <label for="last name">Last Name:</label>
+                            <b-form-input  
+                                type="text"
+                                id="lname" 
+                                placeholder="Enter your last name"
+                                required
+                                v-model="lName">
+                            </b-form-input>       
+                          </div>
+                          <div>
+                              <label for="studNum">Student Number:</label>
+                              <b-form-input  
+                                  type="text" 
+                                  id="studNum" 
+                                  placeholder="Enter your student number"
+                                  required
+                                  v-model="studNum">
+                              </b-form-input>
+                            
+                          </div>
+                  </div>
               <div v-if="!isfilled" class="user-form"> 
                     <form>
                         <div class="form-group">
@@ -36,10 +69,9 @@
                   <div v-if="!isfilled">
                     <b-button variant="success" @click="handleSubmit">Book transport</b-button>
                   </div>
-                <div v-if="isfilled">
-                   <b-button class="btn" variant="danger" @click="cancel">Cancel transport</b-button>
-                </div>
-               
+                  <div v-if="isfilled">
+                    <b-button class="btn" variant="danger" @click="cancel">Cancel transport</b-button>
+                  </div>
                 </div>
           </div>
          </div>
@@ -54,6 +86,7 @@ import { doc, getDoc, getFirestore,setDoc } from "firebase/firestore";
 
 export default {
     name:'home',
+    props:['user'],
      data() {
       return {
        isfilled:false,
@@ -69,29 +102,49 @@ export default {
        studCount:null,
        today:null,
        qrText:null,
+       isStudData:true,
+       fName:null,
+       lName:null,
+       studNum:null
       }
+    },
+    async created(){
+      console.log(this.user.email);
+      
     },
     methods: {
      async  handleSubmit(){
         
       const db=getFirestore();
-      const docRef = doc(db, "Campus", this.select.depature,this.select.destination,this.select.time);
-      const docSnap = await getDoc(docRef);
       var today = new Date();
       var dd = today.getDate();
       var mm = today.getMonth()+1; 
       var yyyy = today.getFullYear();
 
-    
       this.today=dd+'/'+mm+'/'+yyyy;
-       
+
+        if(this.isStudData){
+          this.isStudData=false;
+        // Add a new document in collection "Students"
+        await setDoc(doc(db,"students",this.user.uid),{
+          fname:this.fName,
+          lname:this.lName,
+          studNum:this.studNum,
+          isStudData:this.isStudData
+        });
+        
+      }
+
+      //Transport Bookin
+      const docRef = doc(db, "Campus", this.select.depature,this.select.destination,this.select.time);
+      const docSnap = await getDoc(docRef);
        if (docSnap.exists()) {
           console.log("Document data:", docSnap.data().studCount);
-           this.studCount=docSnap.data().studCount+1;
+          this.studCount=docSnap.data().studCount+1;
           this.isfilled=true;
           this.qrText=this.select.depature+" to "+this.select.destination+" ("+this.select.time+" "+this.today+")";
 
-           // Add a new document in collection "cities"
+           // Add a new document in collection "Campus"
           await setDoc(doc(db, "Campus", this.select.depature,this.select.destination,this.select.time), {
             studCount:this.studCount,
           });
@@ -99,8 +152,6 @@ export default {
           // doc.data() will be undefined in this case
           console.log("No such document!");
         }
-       
-
        },
       async cancel(){
          const db=getFirestore();

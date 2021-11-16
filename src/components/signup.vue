@@ -4,41 +4,11 @@
     <div class="auth-inner">
         <b-form @submit.prevent>
             <h3>Sign up</h3>
-                        <div>
-                    <label for="Name">Name:</label>
-                        <b-form-input  
-                            type="text" 
-                            id="fname" 
-                            placeholder="Enter your first name"
-                            required
-                            v-model="fname">
-                        </b-form-input>
-                            
-            </div>
-                        <div>
-                    <label for="last name">lastname:</label>
-                        <b-form-input  
-                            type="text"
-                            id="lname" 
-                            placeholder="Enter your last name"
-                            required
-                            v-model="lname">
-                        </b-form-input>
-                            
-            </div>
+           
+               
             
-                        <div>
-                    <label for="studNum">student number:</label>
-                        <b-form-input  
-                            type="text" 
-                            id="studNum" 
-                            placeholder="Enter your student number"
-                            required
-                            v-model="studNum">
-                        </b-form-input>
-                            
-            </div>
-            <div>
+                
+                <div>
                     <label for="email">Email:</label>
                         <b-form-input  
                             type="email" 
@@ -50,7 +20,7 @@
                             <b-form-text id="password-help-block">
                                 please use your tut4life email.
                             </b-form-text>
-            </div>
+                </div>
             
         
             <div>
@@ -88,7 +58,7 @@
 <script>
 
    import { getAuth, createUserWithEmailAndPassword,sendEmailVerification} from "firebase/auth";
-   import { doc, setDoc,getFirestore} from "firebase/firestore"; 
+    
    
 
 
@@ -102,9 +72,7 @@ export default {
                 email:null,
                 password:null,
                 password_cornfirm:null,
-                fname:null,
-                lname:null,
-                studNum:null,
+               
             }
         },
         
@@ -160,16 +128,7 @@ export default {
 
 
         },
-        async studentData(){
-             const db = getFirestore();
-            await setDoc(doc(db, "students",this.studNum), {
-            fname: this.fname,
-            lname: this.lname,
-            studNum: this.studNum
-            
-            });
-            console.log(this.studNum);
-        }
+       
      
     }
 }

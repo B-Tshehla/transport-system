@@ -2,7 +2,7 @@
    
 
 <div>
-  <b-navbar toggleable="lg" type="light" variant="light">
+  <b-navbar class="navbar-fixed-top" toggleable="lg" type="light" variant="light">
     <b-navbar-brand >
        <router-link to="/" class="navbar-brand">Home</router-link>
     </b-navbar-brand>

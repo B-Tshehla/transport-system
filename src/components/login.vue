@@ -60,19 +60,9 @@ export default {
 
         handleSubmit(){
 
-
-            const data ={
-                email:this.email,
-                password:this.password,
+            var email=this.email;
+            var password=this.password;
                 
-
-            }
-
-            var email=data.email;
-            var password=data.password;
-                
-              
-
             const auth = getAuth();
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {

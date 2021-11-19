@@ -4,7 +4,6 @@
             <div class="auth-inner-home">
                 <h3>Bus Terminal</h3>
           <div v-if="!isLoaded">
-                
                 <div class="d-flex justify-content-center mb-3">
                   <b-spinner label=""></b-spinner>
                 </div>

@@ -7,10 +7,10 @@ import Signup from './components/signup.vue'
 Vue.use(Router);
 
 export default new Router({
-    mode:'history',
-    routes:[
-        {path:'/login',component:Login},
-        {path:'/',component:Home},
-        {path: '/signup',component:Signup}
+    mode: 'history',
+    routes: [
+        { path: '/', component: Login },
+        { path: '/home', component: Home },
+        { path: '/signup', component: Signup }
     ]
 })

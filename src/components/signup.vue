@@ -45,6 +45,9 @@
             
             </div>
             </div>
+                <div>
+                     <a class="login" @click="login">already have an account</a>
+                </div>
                 <br>
             <div>
                     <b-button block variant="primary" @click="studentData(); handleSubmit()">Submit</b-button>
@@ -128,8 +131,20 @@ export default {
 
 
         },
+        login(){
+            this.$router.push('/')
+        }
        
      
     }
 }
 </script>
+
+<style>
+.login{
+  text-decoration: none;
+  cursor:pointer;
+   color: #7f7d7d;
+   padding-bottom: 10px;
+}
+</style>

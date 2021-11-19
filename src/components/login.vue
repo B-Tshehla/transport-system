@@ -29,8 +29,13 @@
      
        
     </div>
-    <div>
-    <a class="pass" @click="resetPass">forgort password</a>
+      <div class="row align-items-center">
+        <div class="col">
+          <a class="pass" @click="resetPass">forgort password</a>
+        </div>
+        <div class="col">
+          <a class="signup" @click="signup">create an account</a>
+        </div>
     </div>
     <br>
     <div>
@@ -58,7 +63,7 @@ export default {
             }
         },
 
-        handleSubmit(){
+      handleSubmit(){
 
             var email=this.email;
             var password=this.password;
@@ -79,10 +84,10 @@ export default {
 
                    alert(errorCode);
                 });
-
-                
-
-        },
+      },
+      signup(){
+        this.$router.push('/signup');
+      },
     }
 }
 </script>
@@ -116,8 +121,6 @@ export default {
     height: 100%;
   }
 
-
-
 .auth-wrapper{
   display: flex;
   justify-content: center;
@@ -150,9 +153,9 @@ export default {
   font-weight: 400;
 }
 
-.forgot-password ,.forgot-password a{
+.forgot-password,.forgot-password a{
   text-align: right;
-  font-size: 13px;
+  font-size: 20px;
   padding-top: 10px;
   color: #7f7d7d;
   margin: 0;
@@ -164,5 +167,11 @@ export default {
 .pass{
   text-decoration: none;
   cursor:pointer;
+   color: #7f7d7d;
+}
+.signup{
+  text-decoration: none;
+  cursor:pointer;
+   color: #7f7d7d;
 }
 </style>

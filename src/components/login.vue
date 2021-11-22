@@ -74,7 +74,7 @@ export default {
                     // Signed in 
               
                     console.log(userCredential);
-                    this.$router.push('/');
+                    this.$router.push('/home');
                     // ...
                 })
                 .catch((error) => {

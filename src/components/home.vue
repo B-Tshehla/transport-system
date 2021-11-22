@@ -68,8 +68,8 @@
                               </div>
                       </form>
                   </div>
-                  <div v-if="isfilled">
-                      <qr-code class="qr-space" :text="qrText"></qr-code> 
+                  <div v-if="isfilled" class="qr-space">
+                      <qr-code  :text="qrText"></qr-code> 
                   </div>
                   <div>
                     <div v-if="!isfilled">
@@ -125,7 +125,7 @@ export default {
             // https://firebase.google.com/docs/reference/js/firebase.User
             
             this.user=user;
-             this. getUserData(user);
+             this. getUserData(user); 
         } else {
             // User is signed out
             // ...
@@ -172,7 +172,7 @@ export default {
        if (docSnap.exists()) {
           console.log("Document data:", docSnap.data().studCount);
           this.studCount=docSnap.data().studCount+1;
-          this.qrText=this.select.depature+" to "+this.select.destination+" ("+this.select.time+" "+this.today+")";
+          this.qrText=this.user.uid;
 
            // Add a new document in collection "Campus"
           await setDoc(doc(db, "Campus", this.select.depature,this.select.destination,this.select.time), {
@@ -245,7 +245,7 @@ export default {
             this.select.destination=docSnap.data().destination;
             this.select.time=docSnap.data().time;
             this.today=docSnap.data().date;
-            this.qrText=this.select.depature+" to "+this.select.destination+" ("+this.select.time+" "+this.today+")";
+            this.qrText=this.user.uid;
             console.log(docSnap.data());
             this.isLoaded=true;
           } else {
@@ -320,7 +320,8 @@ export default {
     padding-top: 20px;
     padding-bottom: 20px;
     
-    justify-content: center;
+    margin: auto;
+    
 }
 .user-form{
     padding-bottom: 20px;

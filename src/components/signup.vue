@@ -50,7 +50,7 @@
                 </div>
                 <br>
             <div>
-                    <b-button block variant="primary" @click="studentData(); handleSubmit()">Submit</b-button>
+                    <b-button block variant="primary" @click="handleSubmit()">Submit</b-button>
             </div>
             
         </b-form>
@@ -133,9 +133,7 @@ export default {
         },
         login(){
             this.$router.push('/')
-        }
-       
-     
+        }  
     }
 }
 </script>

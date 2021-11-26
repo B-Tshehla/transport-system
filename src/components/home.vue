@@ -118,6 +118,7 @@ export default {
       }
     },
     async created(){
+      this.isLoaded=false;
        const auth = getAuth();
         onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -126,6 +127,7 @@ export default {
             
             this.user=user;
              this. getUserData(user); 
+             
         } else {
             // User is signed out
             // ...
